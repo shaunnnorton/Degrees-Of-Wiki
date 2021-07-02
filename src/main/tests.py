@@ -78,8 +78,7 @@ class MainTests(unittest.TestCase):
     def test_query_new(self):
         """TESTS new query shows proper response"""
         response = self.app.get(
-            "/degree/?url1=https://en.wikipedia.org/wiki/Adolf_" +
-            "Hitler&url2=https://en.wikipedia.org/wiki/Dictator",
+            "/degree/?url1=Adolf_Hitler&url2=Dictator",
             follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
