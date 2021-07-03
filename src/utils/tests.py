@@ -3,12 +3,12 @@ import datetime
 
 from src import app, db
 from src.models import Page, Matches
-from src.utils.utils import get_degree
+import src.utils.utils as utils
 
 
 def CreatePage(url1):
     page = Page(
-        url=url1,
+        name=url1,
         queried=1,
     )
     db.session.add(page)
@@ -18,6 +18,7 @@ def CreatePage(url1):
 
 def CreateMatch():
     m1 = Matches(
+        name="TESTURL1 => TESTURL2",
         url1=CreatePage("TESTURL1"),
         url2=CreatePage("TESTURL2"),
         degrees=33,
@@ -25,6 +26,7 @@ def CreateMatch():
     )
 
     m2 = Matches(
+        name="TESTURL3 => TESTURL4",        
         url1=CreatePage("TESTURL3"),
         url2=CreatePage("TESTURL4"),
         degrees=33,
@@ -55,7 +57,7 @@ class UtilsTests(unittest.TestCase):
 
     def test_adjacent_query(self):
         """TESTS a query that is stored in database"""
-        response = get_degree(
+        response = utils.get_degree(
             "https://en.wikipedia.org/wiki/Adolf_Hitler",
             "https://en.wikipedia.org/wiki/Dictator",
         )
@@ -66,14 +68,14 @@ class UtilsTests(unittest.TestCase):
     def test_stored_query(self):
         """TESTS a query that should return 1"""
         CreateMatch()
-        response = get_degree("TESTURL1", "TESTURL2")
+        response = utils.get_degree("TESTURL1", "TESTURL2")
         self.assertNotEqual(response, None)
         self.assertEqual(response.cached, True)
         self.assertEqual(response.degree, 33)
 
     def test_long_query(self):
         """TESTS a deep query"""
-        response = get_degree(
+        response = utils.get_degree(
             "https://en.wikipedia.org/wiki/Adolf_Hitler",
             "https://en.wikipedia.org/wiki/Regional_Italian",
         )
@@ -83,7 +85,7 @@ class UtilsTests(unittest.TestCase):
 
     def test_dead_end(self):
         """TESTS a query with no links to follow"""
-        response = get_degree(
+        response = utils.get_degree(
             ("https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources" +
                 "/Noticeboard"),
             "https://en.wikipedia.org/wiki/Regional_Italian",
@@ -92,3 +94,21 @@ class UtilsTests(unittest.TestCase):
         self.assertEqual(response.cached, False)
         self.assertEqual(response.degree, None)
         self.assertTrue(response.dead)
+
+    def test_get_page(self):
+        """TESTS the get_page function returns a page model"""
+        utils.get_page("short_circuit")
+        page = Page.query.filter_by(name="short_circuit").first()
+        self.assertIsNotNone(page)
+        self.assertEqual(page.queried, 1)
+
+    def test_check_match_cache(self):
+        """TESTS if cache detection is present"""
+        CreateMatch()
+        result, cache = utils.check_match_cache("TESTURL1", "TESTURL2")
+        self.assertTrue(result)
+        self.assertIsNotNone(cache)
+        self.assertEqual(cache.name, "TESTURL1 => TESTURL2")
+        
+
+    

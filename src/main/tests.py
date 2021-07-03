@@ -7,7 +7,7 @@ from src.models import Page, Matches
 
 def CreatePage(url1):
     page = Page(
-        url=url1,
+        name=url1,
         queried=1,
     )
     db.session.add(page)
@@ -17,6 +17,7 @@ def CreatePage(url1):
 
 def CreateMatch():
     m1 = Matches(
+        name="TESTURL1 => TESTURL2",
         url1=CreatePage("TESTURL1"),
         url2=CreatePage("TESTURL2"),
         degrees=33,
@@ -24,6 +25,7 @@ def CreateMatch():
     )
 
     m2 = Matches(
+        name="TESTURL2 => TESTURL4",
         url1=CreatePage("TESTURL3"),
         url2=CreatePage("TESTURL4"),
         degrees=33,
