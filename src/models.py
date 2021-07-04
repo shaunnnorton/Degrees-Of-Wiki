@@ -47,11 +47,11 @@ class Matches(db.Model):
     def __str__(self):
         return (
             f"<Match: URL1:{self.url1} URL2:{self.url2}" +
-            "Degrees: {self.degrees}> "
+            f"Degrees: {self.degrees}> "
         )
 
     def __repr__(self):
         return (
             f"<Match: URL1:{self.url1} URL2:{self.url2}" +
-            "Degrees: {self.degrees}> "
+            f"Degrees: {self.degrees}> "
         )

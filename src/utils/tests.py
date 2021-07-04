@@ -57,49 +57,51 @@ class UtilsTests(unittest.TestCase):
 
     def test_adjacent_query(self):
         """TESTS a query that is stored in database"""
-        response = utils.get_degree(
-            "https://en.wikipedia.org/wiki/Adolf_Hitler",
-            "https://en.wikipedia.org/wiki/Dictator",
+        cache, Match = utils.get_degree(
+            "Adolf_Hitler",
+            "Dictator",
         )
-        self.assertNotEqual(response, None)
-        self.assertEqual(response.cached, False)
-        self.assertEqual(response.degree, 1)
+        self.assertNotEqual(Match, None)
+        self.assertEqual(cache, False)
+        self.assertEqual(Match.degrees, 1)
 
     def test_stored_query(self):
         """TESTS a query that should return 1"""
         CreateMatch()
-        response = utils.get_degree("TESTURL1", "TESTURL2")
-        self.assertNotEqual(response, None)
-        self.assertEqual(response.cached, True)
-        self.assertEqual(response.degree, 33)
+        cache, Match = utils.get_degree("TESTURL1", "TESTURL2")
+        self.assertNotEqual(Match, None)
+        self.assertEqual(cache, True)
+        self.assertEqual(Match.degrees, 33)
 
     def test_long_query(self):
         """TESTS a deep query"""
-        response = utils.get_degree(
-            "https://en.wikipedia.org/wiki/Adolf_Hitler",
-            "https://en.wikipedia.org/wiki/Regional_Italian",
+        cache, Match = utils.get_degree(
+            "Adolf_Hitler",
+            "Regional_Italian",
         )
-        self.assertNotEqual(response, None)
-        self.assertEqual(response.cached, False)
-        self.assertEqual(response.degree, 8)
+        print(Match)
+        self.assertNotEqual(Match, None)
+        self.assertEqual(cache, False)
+        self.assertEqual(Match.degrees, 5)
 
     def test_dead_end(self):
         """TESTS a query with no links to follow"""
-        response = utils.get_degree(
-            ("https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources" +
+        cache, Match = utils.get_degree(
+            ("Wikipedia:Reliable_sources" +
                 "/Noticeboard"),
-            "https://en.wikipedia.org/wiki/Regional_Italian",
+            "Regional_Italian",
         )
-        self.assertNotEqual(response, None)
-        self.assertEqual(response.cached, False)
-        self.assertEqual(response.degree, None)
-        self.assertTrue(response.dead)
+        self.assertNotEqual(Match, None)
+        self.assertEqual(cache, False)
+        self.assertEqual(Match.degrees, None)
+        
 
     def test_get_page(self):
         """TESTS the get_page function returns a page model"""
         utils.get_page("short_circuit")
         page = Page.query.filter_by(name="short_circuit").first()
         self.assertIsNotNone(page)
+        #print(page.links)
         self.assertEqual(page.queried, 1)
 
     def test_check_match_cache(self):
