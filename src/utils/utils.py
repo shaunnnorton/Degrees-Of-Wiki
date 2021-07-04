@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup, re
 from datetime import datetime
-import urllib3
 
 from src import db
 from src.models import Page, Matches
@@ -18,7 +17,7 @@ invalid_formats = [
     "File:",
     "(disambiguation)",
     ":",
-    "#"
+    "#",
 ]
 
 
@@ -34,8 +33,7 @@ def get_links(soup: BeautifulSoup) -> list:
     if soup.table:
         soup.table.decompose()
     raw_links = soup.find(id="mw-content-text").find_all(
-        "a",
-        {"class":False, "href":re.compile("/wiki/.")}
+        "a", {"class": False, "href": re.compile("/wiki/.")}
     )
     clean_links = set()
     link_list = list()
@@ -45,7 +43,7 @@ def get_links(soup: BeautifulSoup) -> list:
             clean_links.add(term)
             link_list.append(term.lower())
     link_str = str(link_list).strip("[]")
-    link_str = link_str.replace("\'", "")
+    link_str = link_str.replace("'", "")
     link_str = link_str.replace(" ", "")
     return link_str
 
@@ -68,8 +66,9 @@ def get_page(term: str) -> Page:
 
 
 def fetch_article_links(term: str):
-    response = requests.get(f"https://en.wikipedia.org/wiki/{term}",allow_redirects=True)
-    #print(response.url)
+    response = requests.get(
+        f"https://en.wikipedia.org/wiki/{term}", allow_redirects=True
+    )
     links = get_links(BeautifulSoup(response.text, features="html.parser"))
     return links
 
@@ -87,24 +86,29 @@ def get_degree(p1: str, p2: str) -> Matches:
     if isCached:
         return True, cache
 
-    
     # gets or creates Page models for provided terms
     page1 = get_page(p1)
     page2 = get_page(p2)
 
     if any(i in (p1 or p2) for i in invalid_formats):
-        return False ,Matches(
-        name=f"{p1} => {p2}", url1=page1, url2=page2, degrees=None, last=datetime.now()
+        return False, Matches(
+            name=f"{p1} => {p2}",
+            url1=page1,
+            url2=page2,
+            degrees=None,
+            last=datetime.now(),
         )
-
 
     # gets the string to search for
     match_string: str = page2.name.replace(" ", "_")
     match_string: str = match_string.lower()
-    print(match_string.encode("utf8").decode("utf8"))
 
     new_match = Matches(
-        name=f"{p1} => {p2}", url1=page1, url2=page2, degrees=0, last=datetime.now()
+        name=f"{p1} => {p2}",
+        url1=page1,
+        url2=page2,
+        degrees=0,
+        last=datetime.now()
     )
 
     # search for page 2 through many iterations
@@ -112,7 +116,6 @@ def get_degree(p1: str, p2: str) -> Matches:
     found_match = False
     search_links = page1.links.lower()
     search_links = search_links.split(",")
-    #print(search_links)
     visited = set()
     while iterations < 500 and not found_match:
         link_num = 0
@@ -123,28 +126,18 @@ def get_degree(p1: str, p2: str) -> Matches:
             found_match = True
             break
 
-        while link_num < len(search_links) and search_links[link_num] in visited:
+        while(link_num < len(search_links) and search_links[link_num]
+                in visited):
             link_num += 1
 
         if link_num >= len(search_links):
             break
-        print(search_links[link_num])
-        visited.add(search_links[link_num])    
+        visited.add(search_links[link_num])
         search_links = get_page(search_links[link_num])
         search_links = search_links.links.split(",")
 
         iterations += 1
 
-    #print(search_links)
     if iterations >= 500:
         new_match.degrees = None
     return False, new_match
-
-
-# print(check_valid("Wikipedia:"))
-# print(check_valid("Wikipedia"))
-# print(check_valid("Wiki"))
-# print(check_valid("Help:"))
-# print(clean_link("https://en.wikipedia.org/wiki/Portal:Current_events"))
-# print(fetch_article_links("Short_circuit"))
-# print(get_page("Short_Circuit"))

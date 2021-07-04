@@ -26,7 +26,7 @@ def CreateMatch():
     )
 
     m2 = Matches(
-        name="TESTURL3 => TESTURL4",        
+        name="TESTURL3 => TESTURL4",
         url1=CreatePage("TESTURL3"),
         url2=CreatePage("TESTURL4"),
         degrees=33,
@@ -94,14 +94,12 @@ class UtilsTests(unittest.TestCase):
         self.assertNotEqual(Match, None)
         self.assertEqual(cache, False)
         self.assertEqual(Match.degrees, None)
-        
 
     def test_get_page(self):
         """TESTS the get_page function returns a page model"""
         utils.get_page("short_circuit")
         page = Page.query.filter_by(name="short_circuit").first()
         self.assertIsNotNone(page)
-        #print(page.links)
         self.assertEqual(page.queried, 1)
 
     def test_check_match_cache(self):
@@ -111,6 +109,3 @@ class UtilsTests(unittest.TestCase):
         self.assertTrue(result)
         self.assertIsNotNone(cache)
         self.assertEqual(cache.name, "TESTURL1 => TESTURL2")
-        
-
-    
