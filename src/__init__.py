@@ -14,6 +14,8 @@ app.secret_key = os.urandom(24)
 
 db = SQLAlchemy(app)
 
+from src.main.routes import main
+app.register_blueprint(main)
 
 with app.app_context():
     db.create_all()

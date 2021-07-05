@@ -79,7 +79,6 @@ class UtilsTests(unittest.TestCase):
             "Adolf_Hitler",
             "Regional_Italian",
         )
-        print(Match)
         self.assertNotEqual(Match, None)
         self.assertEqual(cache, False)
         self.assertEqual(Match.degrees, 5)

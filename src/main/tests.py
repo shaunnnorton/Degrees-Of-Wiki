@@ -32,7 +32,8 @@ def CreateMatch():
         last=datetime.datetime.now(),
     )
 
-    db.session.add(m1, m2)
+    db.session.add(m1)
+    db.session.add(m2)
     db.session.commit()
 
 
@@ -63,7 +64,7 @@ class MainTests(unittest.TestCase):
 
         self.assertIn("input", res_txt)
         self.assertIn("button", res_txt)
-        self.assertIn("Degrees of Wiki", res_txt)
+        self.assertIn("Welcome to", res_txt)
 
     def test_recent_querys(self):
         """TESTS Landing page shows recent queries"""
@@ -73,31 +74,38 @@ class MainTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         res_txt = response.get_data(as_text=True)
-
         self.assertIn("TESTURL1", res_txt)
         self.assertIn("TESTURL2", res_txt)
 
     def test_query_new(self):
         """TESTS new query shows proper response"""
-        response = self.app.get(
-            "/degree/?url1=Adolf_Hitler&url2=Dictator",
-            follow_redirects=True,
+        data = {
+            "term1": "adolf_hitler",
+            "term2": "dictator"
+        }
+        response = self.app.post(
+            "/degree", data=data, follow_redirects=True
         )
         self.assertEqual(response.status_code, 200)
 
         res_txt = response.get_data(as_text=True)
 
-        self.assertIn("Degrees: 1", res_txt)
+        self.assertIn("1 degrees", res_txt)
 
     def test_query_cached(self):
         """TESTS query that is stored in database"""
         CreateMatch()
 
-        response = self.app.get(
-            "/degree/?url1=TESTURL1&url2=TESTURL2", follow_redirects=True
+        data = {
+            "term1": "TESTURL1",
+            "term2": "TESTURL2"
+        }
+        response = self.app.post(
+            "/degree", data=data, follow_redirects=True
         )
         self.assertEqual(response.status_code, 200)
 
         res_txt = response.get_data(as_text=True)
 
-        self.assertIn("Degrees: 33", res_txt)
+        self.assertIn("33 degrees", res_txt)
+        self.assertIn("YAAAAY!", res_txt)
