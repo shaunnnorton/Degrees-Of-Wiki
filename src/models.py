@@ -1,16 +1,5 @@
 from src import db
 
-# PageModel
-#  URL
-#  Links
-#  Times Queried
-
-# Matches
-#  URL 1
-#  URL 2
-#  Degrees
-#  Last Queried
-
 
 class Page(db.Model):
     """Page Model"""
@@ -19,7 +8,6 @@ class Page(db.Model):
     name = db.Column(db.String(100), nullable=False)  # The url of the Page
     links = db.Column(db.Text, nullable=True)  # String of Links on the Page
     queried = db.Column(db.Integer, nullable=False)  # Number of Times Queried
-    # matches = db.relationship("Matches")
 
     def __str__(self):
         return f"<Page: {self.name} Queried: {self.queried}> "

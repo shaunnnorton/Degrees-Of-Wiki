@@ -5,6 +5,7 @@ from datetime import datetime
 from src import db
 from src.models import Page, Matches
 
+# Links that include these strings will be ignored.
 invalid_formats = [
     "Wikipedia:",
     "Special:",
@@ -50,7 +51,7 @@ def get_links(soup: BeautifulSoup) -> list:
     return link_str
 
 
-def clean_link(link: str):
+def clean_link(link: str) -> str:
     """Cleans links to a more manageable format"""
     split_string = link.split("/")
     clean = split_string[2]
@@ -58,6 +59,7 @@ def clean_link(link: str):
 
 
 def get_page(term: str) -> Page:
+    """Creates a page Object in the Database using the term provided."""
     query = Page.query.filter_by(name=term).first()
     if query:
         return query
@@ -67,7 +69,8 @@ def get_page(term: str) -> Page:
     return new_page
 
 
-def fetch_article_links(term: str):
+def fetch_article_links(term: str) -> list:
+    """Gets the links from the wikipeida article for the term"""
     response = requests.get(
         f"https://en.wikipedia.org/wiki/{term}", allow_redirects=True
     )
@@ -75,14 +78,15 @@ def fetch_article_links(term: str):
     return links
 
 
-def check_match_cache(t1: str, t2: str):
+def check_match_cache(t1: str, t2: str) -> bool and Matches:
+    """Checks if a match of t1 => t2 is in the database"""
     cache = Matches.query.filter_by(name=f"{t1} => {t2}").first()
     if cache:
         return True, cache
     return False, cache
 
 
-def get_degree(p1: str, p2: str) -> Matches:
+def get_degree(p1: str, p2: str) -> bool and Matches:
     """Gets the degree of seperation between links"""
     isCached, cache = check_match_cache(p1, p2)
     if isCached:

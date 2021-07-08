@@ -4,8 +4,13 @@ import datetime
 from src import app, db
 from src.models import Page, Matches
 
+#################################################
+# Setup                                         #
+#################################################
 
-def CreatePage(url1):
+
+def CreatePage(url1: str) -> Page:
+    """Create a Page in the Database"""
     page = Page(
         name=url1,
         queried=1,
@@ -15,7 +20,8 @@ def CreatePage(url1):
     return page
 
 
-def CreateMatch():
+def CreateMatch() -> None:
+    """Creates two test Matches in the Database"""
     m1 = Matches(
         name="TESTURL1 => TESTURL2",
         url1=CreatePage("TESTURL1"),
@@ -25,15 +31,14 @@ def CreateMatch():
     )
 
     m2 = Matches(
-        name="TESTURL2 => TESTURL4",
+        name="TESTURL3 => TESTURL4",
         url1=CreatePage("TESTURL3"),
         url2=CreatePage("TESTURL4"),
         degrees=33,
         last=datetime.datetime.now(),
     )
 
-    db.session.add(m1)
-    db.session.add(m2)
+    db.session.add(m1, m2)
     db.session.commit()
 
 

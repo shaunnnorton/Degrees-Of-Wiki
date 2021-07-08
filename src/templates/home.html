@@ -6,12 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wiki°</title>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 </head>
 
 <body>
+  <!-- Flashed Message Styled into a Modal -->
     {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div class="modal fade-in" id="degree-modal"  tabindex="-1">
@@ -34,6 +37,8 @@
           </div>
         {% endif %}
     {% endwith %}
+
+    <!-- Description of Wiki Degrees -->
     <div class="container p-5 ">
         <h1 class="display-1">Welcome to <span class="bg-secondary p-1 rounded-3">Wiki<span class="text-danger">°</span></span></h1>
         <h3 class="mt-2"><u>What</u></h3>
@@ -41,6 +46,8 @@
         <h3><u>How</u></h3>
         <p>Wiki Degrees will follow the first link in a wikipedia article over and over again checking each article for the second term provided. It will keep looking until it finds it or it has visited 500 unique articles!</p>
     </div>
+
+    <!-- Form for finding degrees -->
     <div class="container p-5">
         <form action="/degree" method="POST">
             <div class="mb-3">
@@ -55,6 +62,8 @@
             <button type="submit" class="btn btn-primary">Submit</button>
          </form>
     </div>
+
+    <!-- Recent queries for degrees -->
     <div class="container mb-3 p-5">
         <h2>Recent Searches</h2>
         <ul class="list-group">
@@ -64,8 +73,9 @@
         </ul>
     </div>
     
-
+<!-- BootStrap Script -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- Adds popup function for modal -->
 <script>
     jQuery(document).ready(function($) {
     $('#degree-modal').modal("show")

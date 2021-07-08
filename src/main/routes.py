@@ -20,9 +20,8 @@ def MainPage():
 
 @main.route("/degree", methods=["POST"])
 def GetDegree():
-    """Return the degree of the match"""
+    """Return the degree of the match in Flashed Message"""
     status, match = get_degree(request.form["term1"], request.form["term2"])
-    print(match)
     if status:
         flash(f"The articles for {match.url1.name} and {match.url2.name}\n" +
               f"are seperated by {match.degrees} degrees\n" + "YAAAAY!")

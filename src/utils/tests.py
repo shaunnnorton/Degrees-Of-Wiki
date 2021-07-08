@@ -5,8 +5,13 @@ from src import app, db
 from src.models import Page, Matches
 import src.utils.utils as utils
 
+#################################################
+# Setup                                         #
+#################################################
 
-def CreatePage(url1):
+
+def CreatePage(url1: str) -> Page:
+    """Create a Page in the Database"""
     page = Page(
         name=url1,
         queried=1,
@@ -16,7 +21,8 @@ def CreatePage(url1):
     return page
 
 
-def CreateMatch():
+def CreateMatch() -> None:
+    """Creates two test Matches in the Database"""
     m1 = Matches(
         name="TESTURL1 => TESTURL2",
         url1=CreatePage("TESTURL1"),
