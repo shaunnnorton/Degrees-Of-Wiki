@@ -18,6 +18,7 @@ invalid_formats = [
     "(disambiguation)",
     ":",
     "#",
+    "wikipedia"
 ]
 
 
@@ -38,10 +39,11 @@ def get_links(soup: BeautifulSoup) -> list:
     clean_links = set()
     link_list = list()
     for i in raw_links:
-        term = clean_link(i.get("href"))
-        if check_valid(term) and term not in clean_links:
-            clean_links.add(term)
-            link_list.append(term.lower())
+        if i.find_parent("p"):
+            term = clean_link(i.get("href"))
+            if check_valid(term) and term not in clean_links:
+                clean_links.add(term)
+                link_list.append(term)
     link_str = str(link_list).strip("[]")
     link_str = link_str.replace("'", "")
     link_str = link_str.replace(" ", "")
@@ -114,30 +116,32 @@ def get_degree(p1: str, p2: str) -> Matches:
     # search for page 2 through many iterations
     iterations = 0
     found_match = False
-    search_links = page1.links.lower()
-    search_links = search_links.split(",")
+    links = page1.links
+    links = links.split(",")
+    comp = page1.links.lower()
     visited = set()
-    while iterations < 500 and not found_match:
+    while iterations < 1000 and not found_match:
         link_num = 0
-        if match_string in search_links:
+        if match_string in comp:
             new_match.degrees = iterations + 1
             db.session.add(new_match)
             db.session.commit()
             found_match = True
             break
 
-        while(link_num < len(search_links) and search_links[link_num]
+        while(link_num < len(links) and links[link_num]
                 in visited):
             link_num += 1
 
-        if link_num >= len(search_links):
+        if link_num >= len(links):
             break
-        visited.add(search_links[link_num])
-        search_links = get_page(search_links[link_num])
-        search_links = search_links.links.split(",")
+        visited.add(links[link_num])
+        links = get_page(links[link_num])
+        comp = links.links.lower()
+        links = links.links.split(",")
+        if len(links) < 1:
+            links = get_page(links[link_num+1])
 
         iterations += 1
-
-    if iterations >= 500:
-        new_match.degrees = None
-    return False, new_match
+    new_match.degrees = iterations
+    return found_match, new_match

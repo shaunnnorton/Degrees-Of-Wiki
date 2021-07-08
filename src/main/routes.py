@@ -23,10 +23,10 @@ def GetDegree():
     """Return the degree of the match"""
     status, match = get_degree(request.form["term1"], request.form["term2"])
     print(match)
-    if match.degrees:
+    if status:
         flash(f"The articles for {match.url1.name} and {match.url2.name}\n" +
               f"are seperated by {match.degrees} degrees\n" + "YAAAAY!")
         return redirect(url_for("main.MainPage"))
     flash(f"The articles for {match.url1.name} and {match.url2.name}\n" +
-          "are seperated by more than 500 degrees\n" + ":(")
+          f"are seperated by more than {match.degrees} degrees\n" + ":(")
     return redirect(url_for("main.MainPage"))

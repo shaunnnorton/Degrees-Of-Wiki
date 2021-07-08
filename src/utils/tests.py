@@ -81,7 +81,7 @@ class UtilsTests(unittest.TestCase):
         )
         self.assertNotEqual(Match, None)
         self.assertEqual(cache, False)
-        self.assertEqual(Match.degrees, 5)
+        self.assertEqual(Match.degrees, 42)
 
     def test_dead_end(self):
         """TESTS a query with no links to follow"""
