@@ -9,7 +9,7 @@ RUN ls -a
 
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=developement
-ENV QLALCHEMY_DATABASE_URI=srv-captain--wikidegrees-db-db
+ENV SQLALCHEMY_DATABASE_URI=srv-captain--wikidegrees-db-db
 ENV SECRET_KEY=8675309FRIDAY
 
 EXPOSE 5000
