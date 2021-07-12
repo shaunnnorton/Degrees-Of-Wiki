@@ -9,7 +9,7 @@ RUN ls -a
 
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=developement
-ENV SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://ADMIN:maurice0012@srv-captain--wikidegrees-db-db:5432/default
+ENV SQLALCHEMY_DATABASE_URI=postgresql://postgres:postgres@db:5432/postgres
 ENV SECRET_KEY=8675309FRIDAY
 
 EXPOSE 5000
