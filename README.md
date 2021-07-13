@@ -7,8 +7,7 @@ Wiki° is a site written in python/Flask to try and find how many clicks it woul
 ## Demo
 
 ![Alt Text](https://media.giphy.com/media/AhcQfI0fUspwhtM3ht/giphy.gif)
-
-  
+ 
 ## Run Locally
 
 Clone the project
@@ -31,7 +30,7 @@ Install dependencies
 
 Set Environment Variables 
 
-```
+```bash
 touch .env
 echo "SECRET_KEY={YOURSECRETKEY}" >> .env
 echo "SQLALCHEMY_DATABASE_URI=sqlite:///database.db" >> .env
@@ -43,7 +42,40 @@ Start the server
   python3 app.py
 ```
 
+## Deploy with Docker
+
+Clone the project
+
+```bash
+  git clone https://github.com/shaunnnorton/Degrees-Of-Wiki.git
+```
+
+Go to the project directory
+
+```bash
+  cd Degrees-Of-Wiki
+```
+
+Change Secret Key
   
+Navigate to Dockerfile in the root directory and change the SECRET_KEY on line 13 to something only you know
+
+```bash
+  nano Dockerfile
+```
+
+Build the docker services
+
+```bash
+  docker-compose build
+```
+
+Bring the services up
+
+```bash
+  docker-compose up
+```
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
@@ -74,4 +106,3 @@ A link will be skipped if it redirects to another Wiki or if it is a link to one
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/shaun-norton-2731b8162/)
 [![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/Shaunnorton72)
 
-  
